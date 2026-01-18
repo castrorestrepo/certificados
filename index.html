@@ -119,7 +119,8 @@
                 curso: row.c[2] ? row.c[2].v : "",
                 detalles: row.c[3] ? row.c[3].v : "",
                 horas: row.c[4] ? row.c[4].v : "",
-                fecha: row.c[5] ? row.c[5].f || row.c[5].v : ""
+                fecha: row.c[5] ? row.c[5].v : "",
+               // fecha: row.c[5] ? row.c[5].f || row.c[5].v : ""
             }));
             
             console.log("Datos cargados correctamente:", registros.length, "registros.");
