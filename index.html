@@ -110,7 +110,7 @@
             const respuesta = await fetch(URL);
             const texto = await respuesta.text();
             // Limpiamos la respuesta de Google para obtener un JSON puro
-            const json = JSON.parse(texto.substr(470).slice(0, -2));
+            const json = JSON.parse(texto.substr(47).slice(0, -2));
   
             // Mapeamos los datos a nuestro formato
             registros = json.table.rows.map(row => ({
