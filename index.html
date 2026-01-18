@@ -59,8 +59,8 @@
             <table id="resultsTable">
                 <thead>
                     <tr>
+                        <th>Nombre</th>
                         <th>Curso</th>
-                        <th>Horas</th>
                         <th>Fecha</th>
                         <th>Acción</th>
                     </tr>
@@ -145,8 +145,9 @@
         if (encontrados.length > 0) {
             encontrados.forEach((reg) => {
                 const row = `<tr>
-                    <td>${reg.curso}</td>
-                    <td>${reg.horas}h</td>
+                    <td>${reg.nombre}</td>
+                    <td>${reg.curso}h</td>
+                    <td>${reg.horas}</td>
                     <td>${reg.fecha}</td>
                     <td><button class="btn-view" onclick='verCertificado(${JSON.stringify(reg)})'>Ver Certificado</button></td>
                 </tr>`;
