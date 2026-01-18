@@ -165,6 +165,8 @@
     }
 
         function verCertificado(datos) {
+            //exponer datos de forma temporal en log - RETIRARA EN PROD
+            console.log(datos);
             document.getElementById('out-nombre').innerText = datos.nombre;
             document.getElementById('out-curso').innerText = datos.curso;
             document.getElementById('out-detalles').innerText = datos.detalles;
