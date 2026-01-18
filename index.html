@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Certificados Académicos</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --primary: #1a2a6c;
+            --gold: #b8860b;
+            --light: #f8f9fa;
+            --accent: #f2a341;
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #eef2f3; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 800px; text-align: center; }
+
+        input { padding: 12px; width: 60%; border: 2px solid #ddd; border-radius: 6px; font-size: 16px; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--primary); }
+
+        button { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-weight: bold; margin: 5px; }
+        button:hover { opacity: 0.9; }
+
+        /* Estilos de la Tabla/Grid */
+        #results-container { margin-top: 30px; display: none; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
+        th { background: var(--primary); color: white; padding: 12px; }
+        td { padding: 12px; border-bottom: 1px solid #ddd; text-align: center; }
+        tr:hover { background-color: #f1f1f1; }
+
+        .btn-view { background: var(--accent); color: white; padding: 6px 12px; font-size: 13px; }
+
+        /* Estilo del Certificado */
+        #certificate-wrapper { display: none; margin-top: 40px; }
+        .certificate {
+            width: 750px; height: 550px; padding: 40px; background: white;
+            border: 20px solid var(--primary); position: relative; box-sizing: border-box;
+            text-align: center; margin: 0 auto;
+            border-image: linear-gradient(45deg, var(--primary), #b8860b) 30;
+        }
+        .cert-content { border: 2px solid var(--gold); height: 100%; padding: 20px; box-sizing: border-box; }
+        .user-name { font-size: 32px; color: var(--gold); font-weight: bold; margin: 20px 0; text-decoration: underline; }
+        
+        @media print { .no-print { display: none; } }
+    </style>
+</head>
+<body>
+
+    <div class="container no-print">
+        <h1>Buscador de Certificados</h1>
+        <p>Introduce tu documento para ver tus cursos realizados</p>
+        <input type="text" id="cedulaInput" placeholder="Número de cédula...">
+        <button onclick="buscarCertificados()">Consultar</button>
+
+        <div id="results-container">
+            <h3>Cursos encontrados</h3>
+            <table id="resultsTable">
+                <thead>
+                    <tr>
+                        <th>Curso</th>
+                        <th>Horas</th>
+                        <th>Fecha</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="certificate-wrapper">
+        <div id="cert-pdf-area" class="certificate">
+            <div class="cert-content">
+                <h2 style="font-size: 40px; margin: 10px 0;">CERTIFICADO</h2>
+                <p>La institución académica certifica que:</p>
+                <div class="user-name" id="out-nombre"></div>
+                <p>Ha aprobado satisfactoriamente el curso de:</p>
+                <h3 id="out-curso" style="font-size: 24px;"></h3>
+                <p>Con una duración de <span id="out-horas"></span> horas lectivas.</p>
+                <br><br>
+                <div style="display: flex; justify-content: space-around;">
+                    <div>_______________________<br>Firma Autorizada</div>
+                    <div><strong>Fecha:</strong> <span id="out-fecha"></span></div>
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 20px;" class="no-print">
+            <button style="background: #27ae60;" onclick="descargarPDF()">📥 Descargar en PDF</button>
+            <button style="background: #666;" onclick="cerrarCertificado()">Volver a la lista</button>
+        </div>
+    </div>
+
+    <script>
+        
+       // CONFIGURACIÓN DE TU GOOGLE SHEET
+    const SHEET_ID = '1a9B4I_tyIfWAsl-8frcWoWlssyb40zcWo4sG3cMR_F8'; // Reemplaza esto con el ID de tu Google Sheet
+    const SHEET_TITLE = 'Hoja 1'; // El nombre de la pestaña abajo en el Excel
+    const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_TITLE}`;
+  
+
+    let registros = [];
+
+    // Función que carga los datos desde Google Sheets al abrir la página
+    async function cargarDatosDesdeGoogle() {
+        try {
+            const respuesta = await fetch(URL);
+            const texto = await respuesta.text();
+            // Limpiamos la respuesta de Google para obtener un JSON puro
+            const json = JSON.parse(texto.substr(47).slice(0, -2));
+            
+            // Mapeamos los datos a nuestro formato
+            registros = json.table.rows.map(row => ({
+                cedula: row.c[0] ? String(row.c[0].v) : "",
+                nombre: row.c[1] ? row.c[1].v : "",
+                curso: row.c[2] ? row.c[2].v : "",
+                horas: row.c[3] ? row.c[3].v : "",
+                fecha: row.c[4] ? row.c[4].f || row.c[4].v : ""
+            }));
+            
+            console.log("Datos cargados correctamente:", registros.length, "registros.");
+        } catch (error) {
+            console.error("Error cargando base de datos:", error);
+            alert("No se pudo cargar la base de datos. Verifica la conexión.");
+        }
+    }
+
+    // Ejecutar la carga al iniciar
+    cargarDatosDesdeGoogle();
+
+    function buscarCertificados() {
+        const cedulaInput = document.getElementById('cedulaInput').value.trim();
+        if (!cedulaInput) return alert("Por favor ingresa una cédula");
+
+        // Filtramos en los registros cargados de la nube
+        const encontrados = registros.filter(r => r.cedula === cedulaInput);
+        const container = document.getElementById('results-container');
+        const tbody = document.getElementById('resultsBody');
+        
+        tbody.innerHTML = "";
+        document.getElementById('certificate-wrapper').style.display = 'none';
+
+        if (encontrados.length > 0) {
+            encontrados.forEach((reg) => {
+                const row = `<tr>
+                    <td>${reg.curso}</td>
+                    <td>${reg.horas}h</td>
+                    <td>${reg.fecha}</td>
+                    <td><button class="btn-view" onclick='verCertificado(${JSON.stringify(reg)})'>Ver Certificado</button></td>
+                </tr>`;
+                tbody.innerHTML += row;
+            });
+            container.style.display = 'block';
+        } else {
+            alert("No se encontraron registros para esa cédula.");
+            container.style.display = 'none';
+        }
+    }
+
+        function verCertificado(datos) {
+            document.getElementById('out-nombre').innerText = datos.nombre;
+            document.getElementById('out-curso').innerText = datos.curso;
+            document.getElementById('out-horas').innerText = datos.horas;
+            document.getElementById('out-fecha').innerText = datos.fecha;
+            
+            document.getElementById('certificate-wrapper').style.display = 'block';
+            document.getElementById('certificate-wrapper').scrollIntoView({behavior: "smooth"});
+        }
+
+        function cerrarCertificado() {
+            document.getElementById('certificate-wrapper').style.display = 'none';
+        }
+
+        function descargarPDF() {
+            const element = document.getElementById('cert-pdf-area');
+            const nombreArchivo = `Certificado_${document.getElementById('out-curso').innerText}.pdf`;
+            const opt = {
+                margin: 0,
+                filename: nombreArchivo,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'px', format: [750, 550], orientation: 'landscape' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+    </script>
+</body>
+</html>
