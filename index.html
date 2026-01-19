@@ -13,6 +13,24 @@
         }
         .cert-title { font-size: 40px; color: #2c3e50; font-weight: bold; }
         .table-container { margin-top: 20px; }
+          /* La imagen flotante */
+        .imagen-flotante {
+            float: left; /* Hace que el texto fluya a su alrededor */
+            margin-right: 20px; /* Espacio entre la imagen y el texto */
+            width: 100px; /* Tamaño de ejemplo */
+            height: 100px; /* Tamaño de ejemplo */
+        }
+
+        /* La imagen con posición absoluta (ejemplo de superposición) */
+        .imagen-absoluta {
+            position: absolute;
+            top: 10px; /* Posición desde el borde superior del contenedor */
+            left: 10px; /* Posición desde el borde izquierdo del contenedor */
+            width: 80px;
+            height: 80px;
+            border: 2px dashed red; /* Para visualizarla */
+            z-index: 1; /* Para asegurar que esté por encima del texto */
+        }
     </style>
 </head>
 <body class="bg-light">
@@ -49,6 +67,7 @@
         <h5 class="cert-title">ANESTESIOLOGÍA Y REANIMACIÓN </h5>
         <h5 class="cert-title">SADEA</h5>
     </span>
+    <img src="https://castrorestrepo.github.io/certificados/logo_sadea.jpeg" alt="logo_sadea" class="imagen-absoluta">
     <span style="color: #808080;">
         <p class="mt-4">Filial de la Sociedad Antioqueña de Anestesiologíaa y Reanimación S.C.A.R.E.</p>
         <p>Certifica que:</p>    
