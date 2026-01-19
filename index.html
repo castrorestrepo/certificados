@@ -110,10 +110,11 @@
         // Llenar la plantilla oculta
         document.getElementById('pdf-nombre').innerText = datos.nombre;
         document.getElementById('pdf-curso').innerText = datos.curso;
+        document.getElementById('pdf-detalles').innerText = datos.detalles;
         document.getElementById('pdf-horas').innerText = datos.horas;
         document.getElementById('pdf-fecha').innerText = datos.fecha;
         document.getElementById('pdf-capacitador').innerText = datos.capacitador;
-        document.getElementById('pdf-detalles').innerText = datos.detalles;
+        
         const element = document.getElementById('certificado-template');
         element.style.display = 'block'; // Mostrar temporalmente para renderizar
 
