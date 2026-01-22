@@ -79,17 +79,16 @@
     </span>
     <p class="mt-4"><h2 id="pdf-nombre" style="text-transform: uppercase; color: #a9883c;"></h2></p>
     <span style="color: #808080;">
-        <p class="mt-4">Identificado con el documento número: xxx.xxx.xxx</p>
+        <p class="mt-4">Identificado con el documento número: <span id="pdf-cedula"></span></p>
  
     </span>
-    <br>
     <h5 id="pdf-detalles" style="color: #000000;"></h5>
-    <p><strong></strong> Modalid de participacion: xxx Estudiante xxxx </p>
+    <p><strong></strong> Modalid de participacion: <span id="pdf-modalidad"></span> </p>
    
     <p><strong></strong> <span id="pdf-fecha"></span></p>
     <div class="mt-5" style="display: flex; justify-content: space-around;">
         <div>
-            <p class="firma">Mauricio Vasco Ramírez</p>
+            <p class="firma"><span id="pdf-presidente"></span></p>
             <span style="color: #808080; border-top: 1px solid #000; padding-top: 3px;"> <p><strong>PRESIDENTE</strong></p></span>
             
         </div>
@@ -101,7 +100,7 @@
     </div>
     <span style="color: #808080;">
         <p class="mt-3">Sideseas validar la autenticidad de este certificado, puedes consultarlo en www.sadea.com.co </p>
-        <p>en el link de certificados y verifica que corresponda con el serial Número: xxx.xxx.xxx.xxx  </p>
+        <p>en el link de certificados y verifica que corresponda con el serial Número: <span id="pdf-serial"></span> </p>
    
         
     </span>
@@ -155,7 +154,11 @@
       //  document.getElementById('pdf-horas').innerText = datos.horas;
         document.getElementById('pdf-fecha').innerText = datos.fecha;
         document.getElementById('pdf-capacitador').innerText = datos.capacitador;
-        
+
+        document.getElementById('pdf-modalidad').innerText = datos.modalidad;
+        document.getElementById('pdf-presidente').innerText = datos.presidente;
+        document.getElementById('pdf-serial').innerText = datos.serial;
+        document.getElementById('pdf-cedula').innerText = datos.cedula;
         const element = document.getElementById('certificado-template');
         element.style.display = 'block'; // Mostrar temporalmente para renderizar
 
