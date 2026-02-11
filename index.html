@@ -79,7 +79,7 @@
     </span>
     <p class="mt-4"><h2 id="pdf-nombre" style="text-transform: uppercase; color: #a9883c;"></h2></p>
     <span style="color: #808080;">
-        <p class="mt-4">Identificado con el documento número: <span id="pdf-cedula"></span></p>
+        <p class="mt-4">Identificado con el documento <span id="pdf-tipodocumento"></span> numero:  <span id="pdf-cedula"></span></p>
  
     </span>
     <h5 id="pdf-detalles" style="color: #292929;"></h5>
@@ -99,7 +99,7 @@
         </div>
     </div>
     <span style="color: #808080;">
-    <p class="mt-3">Si deseas validar la autenticidad de este certificado, consultalo en www.sadea.com.co y verifica que tenga el serial: <span id="pdf-serial" style="color: #8f2121" ></span></p>
+    <p class="mt-3">Si desea validar la autenticidad de este certificado, consulta en www.sadea.com.co el serial: <span id="pdf-serial" style="color: #8f2121" ></span></p>
     </span>
 </div>
 
@@ -156,6 +156,7 @@
         document.getElementById('pdf-presidente').innerText = datos.presidente;
         document.getElementById('pdf-serial').innerText = datos.serial;
         document.getElementById('pdf-cedula').innerText = datos.cedula;
+        document.getElementById('pdf-tipodocumento').innerText = datos.tipodocumento;
         const element = document.getElementById('certificado-template');
         element.style.display = 'block'; // Mostrar temporalmente para renderizar
 
